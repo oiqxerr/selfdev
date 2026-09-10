@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мой прогресс</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">🌱</span>
+      <div class="brand-text">
+        <strong>Мой прогресс</strong>
+        <span id="brandGreeting">Привет!</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item is-active" data-view="today">
+        <span class="nav-ico">☀️</span> Сегодня
+        <span class="nav-badge" id="badgeToday"></span>
+      </button>
+      <button class="nav-item" data-view="tasks">
+        <span class="nav-ico">✅</span> Задачи
+        <span class="nav-badge" id="badgeTasks"></span>
+      </button>
+      <button class="nav-item" data-view="schedule">
+        <span class="nav-ico">🗓️</span> Расписание
+      </button>
+      <button class="nav-item" data-view="homework">
+        <span class="nav-ico">📚</span> Домашка
+        <span class="nav-badge" id="badgeHomework"></span>
+      </button>
+      <button class="nav-item" data-view="habits">
+        <span class="nav-ico">🔥</span> Привычки
+        <span class="nav-badge" id="badgeHabits"></span>
+      </button>
+      <button class="nav-item" data-view="goals">
+        <span class="nav-ico">🎯</span> Цели
+      </button>
+      <button class="nav-item" data-view="notes">
+        <span class="nav-ico">📝</span> Заметки
+      </button>
+      <button class="nav-item" data-view="settings">
+        <span class="nav-ico">⚙️</span> Настройки
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <button class="btn btn-ghost btn-sm" id="themeToggle" title="Сменить тему">🌗 Тема</button>
+      <span class="save-hint" id="saveHint"></span>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+
+    <!-- ---------- СЕГОДНЯ ---------- -->
+    <section class="view is-active" id="view-today">
+      <header class="view-head">
+        <div>
+          <h1 id="todayTitle">Сегодня</h1>
+          <p class="muted" id="todayDate"></p>
+        </div>
+      </header>
+
+      <div class="stats" id="todayStats"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h2>Задачи на сегодня</h2>
+            <button class="btn btn-sm" data-goto="tasks">Все задачи →</button>
+          </div>
+          <form class="quick-add" id="quickTaskForm">
+            <input type="text" id="quickTaskInput" placeholder="Быстро добавить задачу на сегодня…" autocomplete="off">
+            <button class="btn btn-primary btn-sm" type="submit">+</button>
+          </form>
+          <div id="todayTasks" class="list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Расписание на сегодня</h2>
+            <button class="btn btn-sm" data-goto="schedule">Вся неделя →</button>
+          </div>
+          <div id="todaySchedule" class="list"></div>
+        </div>
+      </div>
+
+      <div class="card" id="todayHomeworkCard">
+        <div class="card-head">
+          <h2>Домашнее задание</h2>
+          <button class="btn btn-sm" data-goto="homework">Вся домашка →</button>
+        </div>
+        <div id="todayHomework" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Привычки сегодня</h2>
+          <button class="btn btn-sm" data-goto="habits">Подробнее →</button>
+        </div>
+        <div id="todayHabits" class="habit-today"></div>
+      </div>
+
+      <div class="card" id="todayGoalsCard">
+        <div class="card-head">
+          <h2>Ближайшие цели</h2>
+          <button class="btn btn-sm" data-goto="goals">Все цели →</button>
+        </div>
+        <div id="todayGoals" class="list"></div>
+      </div>
+    </section>
+
+    <!-- ---------- ЗАДАЧИ ---------- -->
+    <section class="view" id="view-tasks">
+      <header class="view-head">
+        <div>
+          <h1>Задачи</h1>
+          <p class="muted">Всё, что нужно сделать</p>
+        </div>
+        <button class="btn btn-primary" id="addTaskBtn">+ Новая задача</button>
+      </header>
+
+      <div class="toolbar">
+        <div class="chips" id="taskFilters">
+          <button class="chip is-active" data-filter="active">Активные</button>
+          <button class="chip" data-filter="today">Сегодня</button>
+          <button class="chip" data-filter="week">7 дней</button>
+          <button class="chip" data-filter="overdue">Просрочено</button>
+          <button class="chip" data-filter="done">Выполнено</button>
+          <button class="chip" data-filter="all">Все</button>
+        </div>
+        <input type="search" id="taskSearch" class="search" placeholder="Поиск…">
+      </div>
+
+      <div id="taskProjects" class="chips chips-sub"></div>
+
+      <div id="tasksList" class="list list-lg"></div>
+    </section>
+
+    <!-- ---------- РАСПИСАНИЕ ---------- -->
+    <section class="view" id="view-schedule">
+      <header class="view-head">
+        <div>
+          <h1>Расписание</h1>
+          <p class="muted">Повторяющаяся неделя: учёба, работа, тренировки</p>
+        </div>
+        <button class="btn btn-primary" id="addLessonBtn">+ Занятие</button>
+      </header>
+
+      <div class="week" id="weekGrid"></div>
+    </section>
+
+    <!-- ---------- ДОМАШКА ---------- -->
+    <section class="view" id="view-homework">
+      <header class="view-head">
+        <div>
+          <h1>Домашка</h1>
+          <p class="muted">Что задали и к какому дню</p>
+        </div>
+        <button class="btn btn-primary" id="addHomeworkBtn">+ Задание</button>
+      </header>
+
+      <div class="toolbar">
+        <div class="chips" id="homeworkFilters">
+          <button class="chip is-active" data-filter="upcoming">Ближайшее</button>
+          <button class="chip" data-filter="today">На сегодня</button>
+          <button class="chip" data-filter="overdue">Просрочено</button>
+          <button class="chip" data-filter="done">Выполнено</button>
+          <button class="chip" data-filter="all">Все</button>
+        </div>
+      </div>
+
+      <div id="homeworkList" class="list list-lg"></div>
+    </section>
+
+    <!-- ---------- ПРИВЫЧКИ ---------- -->
+    <section class="view" id="view-habits">
+      <header class="view-head">
+        <div>
+          <h1>Привычки</h1>
+          <p class="muted">Маленькие шаги каждый день</p>
+        </div>
+        <button class="btn btn-primary" id="addHabitBtn">+ Привычка</button>
+      </header>
+
+      <div id="habitsList" class="habits"></div>
+    </section>
+
+    <!-- ---------- ЦЕЛИ ---------- -->
+    <section class="view" id="view-goals">
+      <header class="view-head">
+        <div>
+          <h1>Цели</h1>
+          <p class="muted">Куда я иду в этом году</p>
+        </div>
+        <button class="btn btn-primary" id="addGoalBtn">+ Цель</button>
+      </header>
+
+      <div id="goalsList" class="goals"></div>
+    </section>
+
+    <!-- ---------- ЗАМЕТКИ ---------- -->
+    <section class="view" id="view-notes">
+      <header class="view-head">
+        <div>
+          <h1>Заметки</h1>
+          <p class="muted">Дневник, идеи, рефлексия</p>
+        </div>
+        <button class="btn btn-primary" id="addNoteBtn">+ Заметка</button>
+      </header>
+
+      <div class="toolbar">
+        <input type="search" id="noteSearch" class="search" placeholder="Поиск по заметкам…">
+      </div>
+
+      <div id="notesList" class="notes"></div>
+    </section>
+
+    <!-- ---------- НАСТРОЙКИ ---------- -->
+    <section class="view" id="view-settings">
+      <header class="view-head">
+        <div>
+          <h1>Настройки</h1>
+          <p class="muted">Данные хранятся только в этом браузере</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <h2>Профиль</h2>
+        <label class="field">
+          <span>Как к тебе обращаться</span>
+          <input type="text" id="settingName" placeholder="Иван">
+        </label>
+        <label class="field">
+          <span>Тема оформления</span>
+          <select id="settingTheme">
+            <option value="dark">Тёмная</option>
+            <option value="light">Светлая</option>
+            <option value="auto">Как в системе</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="card">
+        <h2>Твоё расписание 11Ф</h2>
+        <p class="muted">Загрузить настоящее расписание уроков с фотографии (звонки, кабинеты, учителя). Заменит текущее расписание.</p>
+        <div class="row-btns">
+          <button class="btn" id="loadRealScheduleBtn">📅 Загрузить расписание 11Ф</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Резервная копия</h2>
+        <p class="muted">Сохрани файл, чтобы не потерять данные при чистке браузера или перенести на другой компьютер.</p>
+        <div class="row-btns">
+          <button class="btn" id="exportBtn">⬇️ Скачать JSON</button>
+          <button class="btn" id="importBtn">⬆️ Загрузить из файла</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Статистика</h2>
+        <div class="stats" id="settingsStats"></div>
+      </div>
+
+      <div class="card card-danger">
+        <h2>Опасная зона</h2>
+        <p class="muted">Удалит все задачи, расписание, привычки, цели и заметки. Отменить нельзя.</p>
+        <button class="btn btn-danger" id="wipeBtn">Удалить все данные</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ================= МОДАЛКА ================= -->
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2 id="modalTitle">…</h2>
+      <button class="icon-btn" id="modalClose" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="modalForm">
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="modalCancel">Отмена</button>
+        <button type="submit" class="btn btn-primary" id="modalSubmit">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/homework.js"></script>
+<script src="js/habits.js"></script>
+<script src="js/goals.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/today.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
