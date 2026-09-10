@@ -11,6 +11,8 @@ const Schedule = (() => {
     violet: { label: 'Фиолетовый', css: 'var(--violet)' }
   };
 
+  let weekOffset = 0; // 0 = эта неделя, 1 = следующая, -1 = предыдущая…
+
   function all() { return Store.get().schedule; }
 
   function forDay(dayIndex) {
@@ -21,31 +23,38 @@ const Schedule = (() => {
 
   function colorCss(key) { return (COLORS[key] || COLORS.blue).css; }
 
+  function viewedMonday() { return addDays(startOfWeek(), weekOffset * 7); }
+
   /* ---------- неделя ---------- */
 
   function render() {
     const todayIdx = weekdayIndex();
-    const monday = startOfWeek();
+    const monday = viewedMonday();
+    const sunday = addDays(monday, 6);
+
+    $('#weekRange').textContent = `${formatDate(monday)} – ${formatDate(sunday)}`;
+    $('#weekTodayBtn').hidden = weekOffset === 0;
 
     $('#weekGrid').innerHTML = DAYS_SHORT.map((name, i) => {
       const lessons = forDay(i);
       const date = addDays(monday, i);
+      const isToday = weekOffset === 0 && i === todayIdx;
       return `
-        <div class="day ${i === todayIdx ? 'is-today' : ''}" data-day="${i}">
+        <div class="day ${isToday ? 'is-today' : ''}" data-day="${i}">
           <div class="day-head">
             <span class="day-name">${name}</span>
             <span class="day-count">${date.getDate()}</span>
           </div>
           ${lessons.length
-            ? lessons.map(lessonHTML).join('')
+            ? lessons.map(l => lessonHTML(l, dateKey(date))).join('')
             : `<div class="day-empty">—</div>`}
         </div>`;
     }).join('');
   }
 
-  function lessonHTML(l) {
+  function lessonHTML(l, occurrenceDate) {
     return `
-      <div class="lesson" data-id="${l.id}" style="border-left-color:${colorCss(l.color)}">
+      <div class="lesson" data-id="${l.id}" data-date="${occurrenceDate}" style="border-left-color:${colorCss(l.color)}">
         <div class="lesson-actions">
           <button class="icon-btn" data-act="hw" title="Добавить домашнее задание">📚</button>
           <button class="icon-btn" data-act="del" title="Удалить">✕</button>
@@ -167,8 +176,14 @@ const Schedule = (() => {
 
   /* ---------- события ---------- */
 
+  function goWeek(delta) { weekOffset += delta; render(); }
+  function goThisWeek()  { weekOffset = 0; render(); }
+
   function bind() {
     $('#addLessonBtn').addEventListener('click', () => openForm());
+    $('#weekPrevBtn').addEventListener('click', () => goWeek(-1));
+    $('#weekNextBtn').addEventListener('click', () => goWeek(1));
+    $('#weekTodayBtn').addEventListener('click', goThisWeek);
 
     $('#weekGrid').addEventListener('click', e => {
       const lesson = e.target.closest('.lesson');
@@ -177,7 +192,7 @@ const Schedule = (() => {
         if (act === 'del') del(lesson.dataset.id);
         else if (act === 'hw') {
           const l = Store.find('schedule', lesson.dataset.id);
-          if (l) Homework.openForm(null, { subject: l.title, date: nextOccurrence(l.day) });
+          if (l) Homework.openForm(null, { subject: l.title, date: lesson.dataset.date });
         }
         else openForm(lesson.dataset.id);
         return;

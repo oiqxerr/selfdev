@@ -254,6 +254,13 @@ p  { margin: 0; }
 .quick-add input:focus { outline: none; border-color: var(--accent); }
 
 /* ============ РАСПИСАНИЕ ============ */
+.week-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.week-nav-mid { display: flex; align-items: center; gap: 10px; }
+.week-range { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
+
 .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
 .day {
   background: var(--card); border: 1px solid var(--line);

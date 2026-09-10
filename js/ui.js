@@ -80,13 +80,6 @@ function toMinutes(time) {
   return h * 60 + min;
 }
 
-/** Ближайшая дата (включая сегодня), выпадающая на этот день недели (0=Пн…6=Вс). */
-function nextOccurrence(dayIdx) {
-  let diff = dayIdx - weekdayIndex();
-  if (diff < 0) diff += 7;
-  return dateKey(addDays(new Date(), diff));
-}
-
 function nowMinutes() {
   const d = new Date();
   return d.getHours() * 60 + d.getMinutes();
