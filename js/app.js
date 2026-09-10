@@ -65,6 +65,8 @@ const App = (() => {
     if (document.activeElement !== $('#settingName')) $('#settingName').value = s.settings.name || '';
     $('#settingTheme').value = s.settings.theme || 'dark';
 
+    Sync.renderSettings();
+
     const doneTasks = s.tasks.filter(t => t.done).length;
     const totalChecks = s.habits.reduce((n, h) => n + Object.keys(h.log || {}).length, 0);
     const goalsDone = s.goals.filter(g => g.done || Goals.progress(g) === 100).length;
@@ -266,6 +268,9 @@ const App = (() => {
 
   function init() {
     applyTheme(Store.get().settings.theme || 'dark');
+
+    Sync.init();
+    Sync.bind();
 
     Tasks.bind();
     Schedule.bind();

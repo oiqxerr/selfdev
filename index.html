@@ -250,6 +250,40 @@
         </label>
       </div>
 
+      <div class="card" id="syncCard">
+        <h2>🔄 Синхронизация между устройствами</h2>
+        <p class="muted">Чтобы одни и те же задачи, расписание и привычки были видны и на компьютере, и на телефоне.</p>
+
+        <div id="syncUnavailable" hidden>
+          <p class="muted">Синхронизация ещё не настроена (нет подключения к облаку).</p>
+        </div>
+
+        <div id="syncSetup" hidden>
+          <div class="row-btns">
+            <button type="button" class="btn btn-primary" id="syncCreateBtn">Создать код на этом устройстве</button>
+          </div>
+          <label class="field" style="margin-top:14px">
+            <span>Или введи код с другого устройства</span>
+            <div class="sync-row">
+              <input type="text" id="syncCodeInput" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX" autocomplete="off">
+              <button type="button" class="btn" id="syncConnectBtn">Подключиться</button>
+            </div>
+          </label>
+        </div>
+
+        <div id="syncConnected" hidden>
+          <label class="field">
+            <span>Код этого пространства — введи такой же на другом устройстве</span>
+            <div class="sync-row">
+              <input type="text" id="syncCodeDisplay" readonly>
+              <button type="button" class="btn" id="syncCopyBtn">Скопировать</button>
+            </div>
+          </label>
+          <p class="muted" id="syncStatus">—</p>
+          <button type="button" class="btn btn-danger btn-sm" id="syncDisconnectBtn">Отключить синхронизацию</button>
+        </div>
+      </div>
+
       <div class="card">
         <h2>Твоё расписание 11Ф</h2>
         <p class="muted">Загрузить настоящее расписание уроков с фотографии (звонки, кабинеты, учителя). Заменит текущее расписание.</p>
@@ -302,8 +336,12 @@
 
 <div class="toast" id="toast" hidden></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/store.js"></script>
 <script src="js/ui.js"></script>
+<script src="js/sync.js"></script>
 <script src="js/tasks.js"></script>
 <script src="js/schedule.js"></script>
 <script src="js/homework.js"></script>
