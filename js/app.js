@@ -272,9 +272,7 @@ const App = (() => {
   function init() {
     applyTheme(Store.get().settings.theme || 'dark');
 
-    Sync.init();
-    Sync.bind();
-
+    // сначала — всё, от чего зависит базовая работа приложения
     Tasks.bind();
     Schedule.bind();
     Homework.bind();
@@ -296,6 +294,15 @@ const App = (() => {
     const d = Store.get();
     if (!d.settings.seeded && !d.tasks.length && !d.habits.length && !d.schedule.length) {
       seedDemo();
+    }
+
+    // синхронизация — необязательная надстройка; если Firebase не загрузился
+    // (блокировщик, недоступен CDN и т.п.), это не должно ронять остальное
+    try {
+      Sync.init();
+      Sync.bind();
+    } catch (e) {
+      console.error('Sync недоступен:', e);
     }
   }
 
