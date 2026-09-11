@@ -88,7 +88,10 @@ const App = (() => {
 
   /* ---------- настоящее расписание 11Ф ---------- */
 
-  // day: 0=Пн … 5=Сб. Время — по звонкам с фотографии расписания.
+  // day: 0=Пн … 5=Сб. Учёба в двух местах — ИПФРАН и школа (кабинеты с
+  // трёхзначными номерами). Если весь день в ИПФРАН — институтские звонки
+  // (45 мин, большая перемена 40 мин после 4 урока). Если в конце дня нужно
+  // в школу — весь день идёт по школьным звонкам (без большой перемены).
   const REAL_SCHEDULE = [
     // Понедельник
     { day: 0, start: '08:20', end: '09:05', title: 'Физика',          place: 'Ковалёв / Смирнов · 2319/2408', color: 'violet' },
@@ -99,23 +102,23 @@ const App = (() => {
     { day: 0, start: '13:25', end: '14:10', title: 'Геометрия',       place: 'Кузнецова · 2311',              color: 'amber'  },
     { day: 0, start: '14:20', end: '15:05', title: 'Алгебра',         place: 'Кузнецова · 2311',              color: 'amber'  },
     { day: 0, start: '15:15', end: '16:00', title: 'Разг. о важном',  place: 'Кузнецова · 2311',              color: 'red'    },
-    // Вторник
-    { day: 1, start: '08:20', end: '09:05', title: 'Русский язык',    place: 'Синица · 2313',                 color: 'green'  },
-    { day: 1, start: '09:15', end: '10:00', title: 'Русский язык',    place: 'Синица · 2313',                 color: 'green'  },
-    { day: 1, start: '10:10', end: '10:55', title: 'Литература',      place: 'Синица · 2313',                 color: 'green'  },
-    { day: 1, start: '11:05', end: '11:50', title: 'Биология (б/п)',  place: 'Лебединский · 2321',            color: 'blue'   },
-    { day: 1, start: '12:30', end: '13:15', title: 'Информатика',     place: 'Братч. / Арс. · КЦ',            color: 'blue'   },
-    { day: 1, start: '13:25', end: '14:10', title: 'Информатика',     place: 'Братч. / Арс. · КЦ',            color: 'blue'   },
-    { day: 1, start: '14:20', end: '15:05', title: 'Англ. яз.',       place: 'Кержакова / Мухарл. · 312/406', color: 'green'  },
-    // Среда
-    { day: 2, start: '08:20', end: '09:05', title: 'Алгебра',         place: 'Кузнецова · 2311',              color: 'amber'  },
-    { day: 2, start: '09:15', end: '10:00', title: 'Геометрия',       place: 'Кузнецова · 2311',              color: 'amber'  },
-    { day: 2, start: '10:10', end: '10:55', title: 'История',        place: 'Синяева · 2327',                color: 'red'    },
-    { day: 2, start: '11:05', end: '11:50', title: 'История',        place: 'Синяева · 2327',                color: 'red'    },
-    { day: 2, start: '12:00', end: '12:45', title: 'География',      place: 'Рузанова · 2313',               color: 'blue'   },
-    { day: 2, start: '13:25', end: '14:10', title: 'ОБЗР',           place: 'Кириллов · 114',                color: 'red'    },
-    { day: 2, start: '14:20', end: '15:05', title: 'Физ. культура',  place: 'Фролов / Шильникова · БСЗ',     color: 'red'    },
-    { day: 2, start: '15:15', end: '16:00', title: 'Физ. культура',  place: 'Фролов / Шильникова · БСЗ',     color: 'red'    },
+    // Вторник — в конце дня школа (312/406), поэтому весь день по школьным звонкам
+    { day: 1, start: '08:20', end: '09:00', title: 'Русский язык',    place: 'Синица · 2313',                 color: 'green'  },
+    { day: 1, start: '09:10', end: '09:50', title: 'Русский язык',    place: 'Синица · 2313',                 color: 'green'  },
+    { day: 1, start: '10:10', end: '10:50', title: 'Литература',      place: 'Синица · 2313',                 color: 'green'  },
+    { day: 1, start: '11:00', end: '11:40', title: 'Биология (б/п)',  place: 'Лебединский · 2321',            color: 'blue'   },
+    { day: 1, start: '12:00', end: '12:40', title: 'Информатика',     place: 'Братч. / Арс. · КЦ',            color: 'blue'   },
+    { day: 1, start: '12:50', end: '13:30', title: 'Информатика',     place: 'Братч. / Арс. · КЦ',            color: 'blue'   },
+    { day: 1, start: '13:50', end: '14:30', title: 'Англ. яз.',       place: 'Кержакова / Мухарл. · 312/406', color: 'green'  },
+    // Среда — в конце дня школа (114), поэтому весь день по школьным звонкам
+    { day: 2, start: '08:20', end: '09:00', title: 'Алгебра',         place: 'Кузнецова · 2311',              color: 'amber'  },
+    { day: 2, start: '09:10', end: '09:50', title: 'Геометрия',       place: 'Кузнецова · 2311',              color: 'amber'  },
+    { day: 2, start: '10:10', end: '10:50', title: 'История',        place: 'Синяева · 2327',                color: 'red'    },
+    { day: 2, start: '11:00', end: '11:40', title: 'История',        place: 'Синяева · 2327',                color: 'red'    },
+    { day: 2, start: '12:00', end: '12:40', title: 'География',      place: 'Рузанова · 2313',               color: 'blue'   },
+    { day: 2, start: '12:50', end: '13:30', title: 'ОБЗР',           place: 'Кириллов · 114',                color: 'red'    },
+    { day: 2, start: '13:50', end: '14:30', title: 'Физ. культура',  place: 'Фролов / Шильникова · БСЗ',     color: 'red'    },
+    { day: 2, start: '14:40', end: '15:20', title: 'Физ. культура',  place: 'Фролов / Шильникова · БСЗ',     color: 'red'    },
     // Четверг
     { day: 3, start: '09:15', end: '10:00', title: 'Астрономия',      place: 'Рульков · 2327',                color: 'violet' },
     { day: 3, start: '10:10', end: '10:55', title: 'Геометрия',       place: 'Кузнецова · 2311',              color: 'amber'  },
@@ -124,15 +127,15 @@ const App = (() => {
     { day: 3, start: '13:25', end: '14:10', title: 'Физика ВУД',      place: 'Рейман · 2313',                 color: 'violet' },
     { day: 3, start: '14:20', end: '15:05', title: 'Физика ВУД',      place: 'Рейман · 2313',                 color: 'violet' },
     { day: 3, start: '15:15', end: '16:00', title: 'Билет в будущее', place: 'Кузнецова · 2311',              color: 'red'    },
-    // Пятница
-    { day: 4, start: '08:20', end: '09:05', title: 'Физика',          place: 'Ковалёв / Смирнов · 2319/2408', color: 'violet' },
-    { day: 4, start: '09:15', end: '10:00', title: 'Физика',          place: 'Ковалёв / Смирнов · 2319/2408', color: 'violet' },
-    { day: 4, start: '10:10', end: '10:55', title: 'Алгебра',         place: 'Кузнецова · 2311',              color: 'amber'  },
-    { day: 4, start: '11:05', end: '11:50', title: 'ВерСтат (б/п)',   place: 'Кузнецова · 2311',              color: 'blue'   },
-    { day: 4, start: '12:40', end: '13:25', title: 'Литература',      place: 'Синица · 304',                  color: 'green'  },
-    { day: 4, start: '13:25', end: '14:10', title: 'Литература',      place: 'Синица · 304',                  color: 'green'  },
-    { day: 4, start: '14:20', end: '15:05', title: 'ОФЭ',             place: 'Смирнов / Кочешков · 116/115',  color: 'blue'   },
-    { day: 4, start: '15:15', end: '16:00', title: 'ОФЭ',             place: 'Смирнов / Кочешков · 116/115',  color: 'blue'   },
+    // Пятница — в конце дня школа (304, 116/115), поэтому весь день по школьным звонкам
+    { day: 4, start: '08:20', end: '09:00', title: 'Физика',          place: 'Ковалёв / Смирнов · 2319/2408', color: 'violet' },
+    { day: 4, start: '09:10', end: '09:50', title: 'Физика',          place: 'Ковалёв / Смирнов · 2319/2408', color: 'violet' },
+    { day: 4, start: '10:10', end: '10:50', title: 'Алгебра',         place: 'Кузнецова · 2311',              color: 'amber'  },
+    { day: 4, start: '11:00', end: '11:40', title: 'ВерСтат (б/п)',   place: 'Кузнецова · 2311',              color: 'blue'   },
+    { day: 4, start: '12:00', end: '12:40', title: 'Литература',      place: 'Синица · 304',                  color: 'green'  },
+    { day: 4, start: '12:50', end: '13:30', title: 'Литература',      place: 'Синица · 304',                  color: 'green'  },
+    { day: 4, start: '13:50', end: '14:30', title: 'ОФЭ',             place: 'Смирнов / Кочешков · 116/115',  color: 'blue'   },
+    { day: 4, start: '14:40', end: '15:20', title: 'ОФЭ',             place: 'Смирнов / Кочешков · 116/115',  color: 'blue'   },
     // Суббота (укороченные звонки)
     { day: 5, start: '08:20', end: '09:00', title: 'Алгебра',         place: 'Кузнецова · 401',               color: 'amber'  },
     { day: 5, start: '09:10', end: '09:50', title: 'Алгебра',         place: 'Кузнецова · 401',               color: 'amber'  },
