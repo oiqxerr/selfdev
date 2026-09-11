@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой прогресс</title>
+  <title>Dicipline</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
@@ -16,8 +16,7 @@
     <div class="brand">
       <img class="brand-mark" src="assets/logo.png" alt="">
       <div class="brand-text">
-        <strong>Мой прогресс</strong>
-        <span id="brandGreeting">Привет!</span>
+        <strong>Dicipline</strong>
       </div>
     </div>
 
@@ -91,6 +90,28 @@
             <button class="btn btn-sm" data-goto="schedule">Вся неделя →</button>
           </div>
           <div id="todaySchedule" class="list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Активность по домашке</h2>
+          <span class="muted" id="activityCount"></span>
+        </div>
+        <div class="heatmap-scroll" id="heatmapScroll">
+          <div class="heatmap">
+            <div class="hm-months" id="hmMonths"></div>
+            <div class="hm-days">
+              <span>Пн</span><span></span><span>Ср</span><span></span><span>Пт</span><span></span><span></span>
+            </div>
+            <div class="hm-grid" id="hmGrid"></div>
+          </div>
+        </div>
+        <div class="hm-legend">
+          <span class="hm-cell hm-none"></span><span>нет заданий</span>
+          <span class="hm-cell hm-miss"></span><span>ничего не сделано</span>
+          <span class="hm-cell hm-low"></span><span class="hm-cell hm-high"></span><span>частично</span>
+          <span class="hm-cell hm-full"></span><span>всё сделано</span>
         </div>
       </div>
 
@@ -357,6 +378,7 @@
 <script src="js/habits.js"></script>
 <script src="js/goals.js"></script>
 <script src="js/notes.js"></script>
+<script src="js/activity.js"></script>
 <script src="js/today.js"></script>
 <script src="js/app.js"></script>
 </body>

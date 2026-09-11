@@ -60,6 +60,7 @@ const Today = (() => {
 
     renderStats();
     renderTasks();
+    Activity.render();
     Schedule.renderToday();
     Homework.renderToday();
     Habits.renderToday();

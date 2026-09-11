@@ -38,9 +38,6 @@ const App = (() => {
     $('#badgeTasks').textContent = t.active || '';
     $('#badgeHomework').textContent = hw.active || '';
     $('#badgeHabits').textContent = hb.total ? `${hb.done}/${hb.total}` : '';
-
-    const name = (Store.get().settings.name || '').trim();
-    $('#brandGreeting').textContent = name ? `${Today.greeting()}, ${name}` : 'Ежедневник и цели';
   }
 
   /* ---------- тема ---------- */
@@ -165,7 +162,7 @@ const App = (() => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `moy-progress-${dateKey()}.json`;
+    a.download = `dicipline-${dateKey()}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -279,6 +276,7 @@ const App = (() => {
     Habits.bind();
     Goals.bind();
     Notes.bind();
+    Activity.bind();
     bind();
 
     // любая запись в хранилище → перерисовываем активный экран
