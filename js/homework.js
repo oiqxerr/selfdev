@@ -7,8 +7,9 @@ const Homework = (() => {
 
   function all() { return Store.get().homework; }
 
-  function isOverdue(hw) { return !hw.done && hw.date && hw.date < dateKey(); }
-  function isToday(hw)   { return !hw.done && hw.date === dateKey(); }
+  function isOverdue(hw)  { return !hw.done && hw.date && hw.date < dateKey(); }
+  function isToday(hw)    { return !hw.done && hw.date === dateKey(); }
+  function isTomorrow(hw) { return !hw.done && hw.date === dateKey(addDays(new Date(), 1)); }
 
   function sorted(list) {
     return [...list].sort((a, b) => {
@@ -35,15 +36,17 @@ const Homework = (() => {
   function counts() {
     const list = all();
     return {
-      today:   list.filter(isToday).length,
-      overdue: list.filter(isOverdue).length,
-      active:  list.filter(h => !h.done).length
+      today:    list.filter(isToday).length,
+      tomorrow: list.filter(isTomorrow).length,
+      overdue:  list.filter(isOverdue).length,
+      active:   list.filter(h => !h.done).length
     };
   }
 
-  /** Задания на сегодня и просроченные — для дашборда. */
-  function forToday() {
-    return sorted(all().filter(h => !h.done && h.date && h.date <= dateKey()));
+  /** Просроченные и завтрашние задания — для дашборда (сегодняшнее уже пора сдавать). */
+  function forDashboard() {
+    const tomorrow = dateKey(addDays(new Date(), 1));
+    return sorted(all().filter(h => !h.done && h.date && (h.date < dateKey() || h.date === tomorrow)));
   }
 
   function subjects() {
@@ -83,10 +86,10 @@ const Homework = (() => {
   }
 
   function renderToday() {
-    const list = forToday();
+    const list = forDashboard();
     $('#todayHomework').innerHTML = list.length
       ? list.map(itemHTML).join('')
-      : emptyState('📚', 'На сегодня заданий нет.');
+      : emptyState('📚', 'На завтра заданий нет.');
   }
 
   /* ---------- действия ---------- */
