@@ -7,9 +7,8 @@ const Homework = (() => {
 
   function all() { return Store.get().homework; }
 
-  function isOverdue(hw)  { return !hw.done && hw.date && hw.date < dateKey(); }
-  function isToday(hw)    { return !hw.done && hw.date === dateKey(); }
-  function isTomorrow(hw) { return !hw.done && hw.date === dateKey(addDays(new Date(), 1)); }
+  function isOverdue(hw) { return !hw.done && hw.date && hw.date < dateKey(); }
+  function isToday(hw)   { return !hw.done && hw.date === dateKey(); }
 
   function sorted(list) {
     return [...list].sort((a, b) => {
@@ -35,18 +34,40 @@ const Homework = (() => {
 
   function counts() {
     const list = all();
+    const next = nextSchoolDayKey();
     return {
-      today:    list.filter(isToday).length,
-      tomorrow: list.filter(isTomorrow).length,
-      overdue:  list.filter(isOverdue).length,
-      active:   list.filter(h => !h.done).length
+      today:         list.filter(isToday).length,
+      nextSchoolDay: list.filter(h => !h.done && h.date === next).length,
+      overdue:       list.filter(isOverdue).length,
+      active:        list.filter(h => !h.done).length
     };
   }
 
-  /** Просроченные и завтрашние задания — для дашборда (сегодняшнее уже пора сдавать). */
+  /**
+   * Ближайший день, на который вообще есть уроки по расписанию — пропускает
+   * воскресенье и любые дни без занятий. В субботу это покажет понедельник.
+   */
+  function nextSchoolDayKey() {
+    let d = addDays(new Date(), 1);
+    for (let i = 0; i < 7; i++) {
+      if (Schedule.forDay(weekdayIndex(d)).length) return dateKey(d);
+      d = addDays(d, 1);
+    }
+    return dateKey(addDays(new Date(), 1)); // не должно случиться, но на всякий случай
+  }
+
+  /** Заголовок карточки на дашборде: «на завтра» или «на понедельник (14.09.2026)». */
+  function dashboardTitle() {
+    const key = nextSchoolDayKey();
+    if (daysBetween(dateKey(), key) === 1) return 'Домашнее задание на завтра';
+    const d = parseKey(key);
+    return `Домашнее задание на ${DAYS_FULL[weekdayIndex(d)].toLowerCase()} (${formatDate(d)})`;
+  }
+
+  /** Просроченные и задания к ближайшему учебному дню — для дашборда. */
   function forDashboard() {
-    const tomorrow = dateKey(addDays(new Date(), 1));
-    return sorted(all().filter(h => !h.done && h.date && (h.date < dateKey() || h.date === tomorrow)));
+    const next = nextSchoolDayKey();
+    return sorted(all().filter(h => !h.done && h.date && (h.date < dateKey() || h.date === next)));
   }
 
   function subjects() {
@@ -86,10 +107,11 @@ const Homework = (() => {
   }
 
   function renderToday() {
+    $('#todayHomeworkTitle').textContent = dashboardTitle();
     const list = forDashboard();
     $('#todayHomework').innerHTML = list.length
       ? list.map(itemHTML).join('')
-      : emptyState('📚', 'На завтра заданий нет.');
+      : emptyState('📚', 'Заданий нет.');
   }
 
   /* ---------- действия ---------- */
@@ -168,5 +190,5 @@ const Homework = (() => {
     });
   }
 
-  return { bind, render, renderToday, counts, openForm, all };
+  return { bind, render, renderToday, counts, openForm, nextSchoolDayKey, all };
 })();

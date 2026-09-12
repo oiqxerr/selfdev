@@ -23,9 +23,9 @@ const Today = (() => {
 
     const cards = [
       { cls: 'stat-accent', val: t.today, label: `${plural(t.today, 'задача', 'задачи', 'задач')} на сегодня` },
-      hw.tomorrow > 0 || hw.overdue > 0
-        ? { cls: hw.overdue > 0 ? 'stat-red' : 'stat-accent', val: hw.tomorrow + hw.overdue,
-            label: `${plural(hw.tomorrow + hw.overdue, 'задание', 'задания', 'заданий')} по ДЗ` }
+      hw.nextSchoolDay > 0 || hw.overdue > 0
+        ? { cls: hw.overdue > 0 ? 'stat-red' : 'stat-accent', val: hw.nextSchoolDay + hw.overdue,
+            label: `${plural(hw.nextSchoolDay + hw.overdue, 'задание', 'задания', 'заданий')} по ДЗ` }
         : null,
       { cls: 'stat-green',  val: t.doneToday, label: 'выполнено сегодня' },
       { cls: 'stat-amber',  val: `${hb.done}/${hb.total}`, label: `привычек · ${habitPct}%` },

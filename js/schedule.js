@@ -203,5 +203,5 @@ const Schedule = (() => {
     });
   }
 
-  return { bind, render, renderToday, nextToday, all };
+  return { bind, render, renderToday, nextToday, forDay, all };
 })();
